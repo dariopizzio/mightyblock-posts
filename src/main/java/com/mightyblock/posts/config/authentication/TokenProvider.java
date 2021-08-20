@@ -25,8 +25,8 @@ public class TokenProvider {
      * @return TokenDto generated token
      */
     public Claims validateToken(HttpServletRequest request) {
-        String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
-        return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(jwtToken).getBody();
+        String token = request.getHeader(HEADER).replace(PREFIX, "");
+        return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody();
     }
 
     /**
@@ -38,5 +38,15 @@ public class TokenProvider {
     public boolean tokenExists(HttpServletRequest request) {
         String authenticationHeader = request.getHeader(HEADER);
         return (authenticationHeader != null && authenticationHeader.startsWith(PREFIX));
+    }
+
+    /**
+     * returns userId from the token
+     * @param authorizationHeader Authorization header content
+     * @return userId from the token
+     */
+    public String getUserId(String authorizationHeader) {
+        String token = authorizationHeader.substring(PREFIX.length());
+        return (String) Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().get("userId");
     }
 }

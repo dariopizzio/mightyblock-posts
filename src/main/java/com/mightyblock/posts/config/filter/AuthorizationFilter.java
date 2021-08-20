@@ -30,6 +30,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         this.utils = utils;
     }
 
+    /**
+     * Function that filter the requests if there is not a valid token in the Authorization header or the url is in the white list
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
         try {
