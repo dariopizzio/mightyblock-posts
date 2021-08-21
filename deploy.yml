@@ -9,19 +9,23 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    networks:
+      - posts-net
   #database admin interface
   mongo-express:
     image: mongo-express
     restart: always
     ports:
     #TODO check ports
-      - 8081:8081
+      - 8082:8082
     depends_on:
       - mongo_db
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: rootpassword
       ME_CONFIG_MONGODB_URL: mongodb://root:rootpassword@mongo-posts:27017/
+    networks:
+      - posts-net
   #posts ms
   ms-posts:
     build:
@@ -37,3 +41,8 @@ services:
       - mongo_db
     ports:
       - 9000:9000
+    networks:
+      - posts-net
+networks:
+  posts-net:
+    name: proxy_network

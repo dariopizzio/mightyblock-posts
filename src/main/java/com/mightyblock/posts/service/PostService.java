@@ -65,7 +65,7 @@ public class PostService {
             postToLike.getLikes().removeAll(likesList);
         }
         postToLike.setLikeCounter(postToLike.getLikes().size());
-        repository.save(postToLike);//TODO is this necessary?
+        repository.save(postToLike);
     }
 
     private PostDto convertPostToDto(Post post){
