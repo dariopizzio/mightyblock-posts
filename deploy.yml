@@ -43,6 +43,7 @@ services:
       - 9000:9000
     networks:
       - posts-net
+#Network
 networks:
   posts-net:
     name: proxy_network
