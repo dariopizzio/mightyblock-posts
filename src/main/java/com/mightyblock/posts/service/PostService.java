@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +22,16 @@ public class PostService {
     @Autowired
     PostRepository repository;
 
+    @Autowired
+    Clock now;
+
     /**
      * @param createPostRequest to create
      * @param userId
      * @return String postId created
      */
     public String createPost(CreatePostRequest createPostRequest, String userId) {
-        Post post = new Post(userId, createPostRequest.getDescription(), createPostRequest.getImagePath());
+        Post post = new Post(userId, createPostRequest.getDescription(), createPostRequest.getImagePath(), now);
         Post postSaved = repository.save(post);
         return postSaved.getId();
     }
@@ -60,7 +64,7 @@ public class PostService {
         List<Like> likesList = postToLike.getLikes().stream().filter(like -> like.getUserId().equals(userId)).collect(Collectors.toList());
         //Max size should be 1
         if(likesList.size() == 0){
-            postToLike.getLikes().add(new Like(userId));
+            postToLike.getLikes().add(new Like(userId, now));
         }else{
             postToLike.getLikes().removeAll(likesList);
         }

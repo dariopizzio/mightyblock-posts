@@ -2,6 +2,9 @@ package com.mightyblock.posts;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import java.time.Clock;
 
 /**
  * Microservice that implements all the necessary functions for the post model
@@ -17,4 +20,8 @@ public class PostsApplication {
 		SpringApplication.run(PostsApplication.class, args);
 	}
 
+	@Bean
+	Clock clock() {
+		return Clock.systemUTC();
+	}
 }
