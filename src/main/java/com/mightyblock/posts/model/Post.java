@@ -1,5 +1,6 @@
 package com.mightyblock.posts.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Getter
+@Data
 @Document(collection = "posts")
 public class Post implements Serializable {
 
