@@ -37,7 +37,7 @@ public class PostService {
      * @param postId postId to delete
      */
     public void deletePost(String postId) {
-        repository.deleteById(postId);
+        repository.deleteById(postId);//TODO validates if is the owner of the post!
     }
 
     /**
@@ -45,7 +45,7 @@ public class PostService {
      * @return List of posts
      */
     public Page<PostDto> findAll(Pageable paging) {
-        Page<Post> postList = repository.findAll(paging);
+        Page<Post> postList = repository.findAll(paging);//TODO return if the user liked the post, to check if he could like it after
         return postList.map(it -> convertPostToDto(it));
     }
 
@@ -55,7 +55,7 @@ public class PostService {
      * @param postId postId to like
      * @throws ApiException when the post does not exist
      */
-    public void likePost(String postId, String userId) throws ApiException {
+    public Post likePost(String postId, String userId) throws ApiException {
         Post postToLike = repository.findById(postId).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Post not found", "/posts/like"));
         List<Like> likesList = postToLike.getLikes().stream().filter(like -> like.getUserId().equals(userId)).collect(Collectors.toList());
         //Max size should be 1
@@ -65,7 +65,7 @@ public class PostService {
             postToLike.getLikes().removeAll(likesList);
         }
         postToLike.setLikeCounter(postToLike.getLikes().size());
-        repository.save(postToLike);
+        return repository.save(postToLike);
     }
 
     private PostDto convertPostToDto(Post post){
