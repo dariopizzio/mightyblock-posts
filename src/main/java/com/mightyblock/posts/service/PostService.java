@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.Clock;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +29,11 @@ public class PostService {
 
     /**
      * @param createPostRequest to create
-     * @param userId
+     * @param userId userId from the post owner
      * @return String postId created
      */
     public String createPost(CreatePostRequest createPostRequest, String userId) {
-        Post post = new Post(userId, createPostRequest.getDescription(), createPostRequest.getImagePath(), now);
+        Post post = new Post(userId, createPostRequest.getDescription(), createPostRequest.getImagePath(), new Date(now.millis()));
         Post postSaved = repository.save(post);
         return postSaved.getId();
     }
@@ -50,7 +52,7 @@ public class PostService {
      */
     public Page<PostDto> findAll(Pageable paging) {
         Page<Post> postList = repository.findAll(paging);//TODO return if the user liked the post, to check if he could like it after
-        return postList.map(it -> convertPostToDto(it));
+        return postList.map(this::convertPostToDto);
     }
 
     /**
@@ -60,11 +62,11 @@ public class PostService {
      * @throws ApiException when the post does not exist
      */
     public Post likePost(String postId, String userId) throws ApiException {
-        Post postToLike = repository.findById(postId).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Post not found", "/posts/like"));
+        Post postToLike = repository.findById(postId).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Post not found", "/posts/like", new Timestamp(now.millis())));
         List<Like> likesList = postToLike.getLikes().stream().filter(like -> like.getUserId().equals(userId)).collect(Collectors.toList());
         //Max size should be 1
         if(likesList.size() == 0){
-            postToLike.getLikes().add(new Like(userId, now));
+            postToLike.getLikes().add(new Like(userId, new Date(now.millis())));
         }else{
             postToLike.getLikes().removeAll(likesList);
         }
@@ -73,6 +75,6 @@ public class PostService {
     }
 
     private PostDto convertPostToDto(Post post){
-        return new PostDto(post.getId(), post.getUserId(), post.getDescription(), post.getImagePath(), post.getLikeCounter());
+        return new PostDto(post.getId(), post.getUserId(), post.getDescription(), post.getImagePath(), post.getLikeCounter(), post.getUploadTime());
     }
 }

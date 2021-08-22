@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Date;
+
 @ApiModel(description = "Class that represents a post")
 @Data
 @AllArgsConstructor
@@ -20,4 +22,6 @@ public class PostDto {
     private String imagePath;
     @ApiModelProperty(value = "Likes counter, by default is 0")
     private int likeCounter;
+    @ApiModelProperty(value = "Upload time")
+    private Date uploadTime;
 }

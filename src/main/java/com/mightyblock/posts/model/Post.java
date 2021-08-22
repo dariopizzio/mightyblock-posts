@@ -6,7 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,11 +24,11 @@ public class Post implements Serializable {
     private int likeCounter;
     private List<Like> likes;
 
-    public Post(String userId, String description, String imagePath, Clock now){
+    public Post(String userId, String description, String imagePath, Date uploadTime){
         this.userId = userId;
         this.description = description;
         this.imagePath = imagePath;
-        this.uploadTime = new Date(now.millis());
+        this.uploadTime = uploadTime;
         this.likeCounter = 0;
         this.likes = new ArrayList<>();
     }

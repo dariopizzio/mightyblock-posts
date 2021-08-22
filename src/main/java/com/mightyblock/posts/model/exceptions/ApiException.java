@@ -19,8 +19,8 @@ public class ApiException extends Exception {
     private String error;
     private String path;
 
-    public ApiException(HttpStatus status, String error, String path){
-        this.timestamp = new Timestamp(System.currentTimeMillis());
+    public ApiException(HttpStatus status, String error, String path, Timestamp timestamp){
+        this.timestamp = timestamp;
         this.status = status;
         this.error = error;
         this.path = path;

@@ -12,8 +12,8 @@ public class Like implements Serializable {
     private String userId;
     private Date likeDate;
 
-    public Like(String userId, Clock now){
+    public Like(String userId, Date likeDate){
         this.userId = userId;
-        this.likeDate = new Date(now.millis());
+        this.likeDate = likeDate;
     }
 }
